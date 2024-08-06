@@ -1,2 +1,4 @@
 docker-compose.yml
 metricbeat.yaml
+.gitignore
+.dockerignore
