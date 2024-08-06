@@ -1,0 +1,48 @@
+# ElastAlert Setup and Usage
+
+## How to Define a Rule
+
+Refer to the [ElastAlert Rule Types documentation](https://elastalert2.readthedocs.io/en/latest/ruletypes.html).
+
+## How to Define an Alert
+
+Refer to the [ElastAlert Alerts documentation](https://elastalert2.readthedocs.io/en/latest/alerts.html).
+
+## How to Use
+
+### Define Environment Variables
+
+Set the environment variables required to connect to Elasticsearch:
+
+```sh
+export ELASTICSEARCH_HOST=elasticsearch
+export ELASTICSEARCH_PORT=9200
+```
+
+## Run ElastAlert
+
+```sh
+docker run -d --name elastalert --restart=always \
+  -v $(pwd)/config/config.yaml:/opt/elastalert/config.yaml \
+  -v $(pwd)/rules:/opt/elastalert/rules \
+  -e ELASTICSEARCH_HOST=$ELASTICSEARCH_HOST \
+  -e ELASTICSEARCH_PORT=$ELASTICSEARCH_PORT \
+  d6n13l0l1v3r/elastalert --verbose
+```
+
+## View Logs
+
+```sh
+docker logs -f elastalert
+```
+
+## How to Test a Rule
+
+```sh
+docker run --rm -it \
+  -v $(pwd)/config/config.yaml:/opt/elastalert/config.yaml \
+  -v $(pwd)/rules:/opt/elastalert/rules \
+  --entrypoint elastalert-test-rule \
+  d6n13l0l1v3r/elastalert2 \
+  /opt/elastalert/rules/rule1.yaml
+```

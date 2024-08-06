@@ -1,0 +1,18 @@
+name: Example frequency rule
+
+type: frequency
+index: metricbeat-*
+num_events: 1
+timeframe:
+  hours: 1
+
+
+filter:
+- range:
+    system.load.5:
+        gt: 5.0
+
+alert:
+  - "telegram"
+telegram_bot_token: "7316686283:AAEdC7mWBdLgef-2Eyjkpk7e_GbuKjrM8FQ"
+telegram_room_id: "165577507"

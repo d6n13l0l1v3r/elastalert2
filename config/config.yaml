@@ -1,0 +1,25 @@
+# Elasticsearch server settings
+es_host: ${ELASTICSEARCH_HOST}
+es_port: ${ELASTICSEARCH_PORT}
+
+# The index in Elasticsearch where ElastAlert2 stores its alerts and status
+writeback_index: elastalert
+
+# Frequency of checking for new alerts
+run_every:
+  minutes: 1  # Adjust this as needed
+
+# The time period to buffer events
+buffer_time:
+  minutes: 15  # Adjust this as needed
+
+alert_time_limit:
+  days: 2
+
+# Optional: Log level for ElastAlert2
+log_level: INFO
+
+# Directory containing ElastAlert2 rule files
+rules_folder: /opt/elastalert/rules
+
+
