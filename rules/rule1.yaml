@@ -14,5 +14,5 @@ filter:
 
 alert:
   - "telegram"
-telegram_bot_token: "7316686283:AAEdC7mWBdLgef-2Eyjkpk7e_GbuKjrM8FQ"
-telegram_room_id: "165577507"
+telegram_bot_token: ${TELEGRAM_TOKEN}
+telegram_room_id: ${TELEGRAM_ROOM}
