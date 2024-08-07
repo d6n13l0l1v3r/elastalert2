@@ -2,20 +2,17 @@ name: DockerHub
 
 on:
   push:
+    #I'm not sure if it is better to use 'master' instead of '*' here.
+    #branches: ["master"]
     branches: ["*"]
   pull_request:
     branches: ["*"]
 
 env:
-  # Use docker.io for Docker Hub if empty
   REGISTRY: docker.io
-  # github.repository as <account>/<repo>
   IMAGE_NAME: d6n13l0l1v3r/elastalert2
-  # Default tag
   DEFAULT_TAG: latest
-  # Build number
   BUILD_NUMBER: ${{ github.run_number }}
-  VERSION: v1.0.0
 
 jobs:
   build:
@@ -29,12 +26,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Calculate version
+        id: calculate_version
+        run: |
+          git fetch --all
+          GIT_REVNUM=$(git rev-list HEAD --count)
+          FIX_REVNUM=$(git rev-list origin/master..HEAD --count)
+          major=$(date -u +%y%j)
+          VERSION_TAG="${major}.${GIT_REVNUM:-0}.${FIX_REVNUM:-0}-build${{ env.BUILD_NUMBER }}"
+          echo "VERSION_TAG=${VERSION_TAG}" >> $GITHUB_ENV
+
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
       - name: Log into registry ${{ env.REGISTRY }}
         if: github.event_name != 'pull_request'
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -42,7 +49,7 @@ jobs:
 
       - name: Extract Docker metadata
         id: meta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
@@ -53,7 +60,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: false  # Do not push yet
+          push: false
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -69,7 +76,7 @@ jobs:
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}-${{ env.BUILD_NUMBER }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION_TAG }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
