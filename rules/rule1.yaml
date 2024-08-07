@@ -10,7 +10,7 @@ timeframe:
 filter:
 - range:
     system.load.5:
-        gt: 5.0
+        gt: 1.5
 
 alert:
   - "telegram"
