@@ -3,6 +3,8 @@ name: Enforce Pull Request Workflow
 on:
   push:
     branches: ["*"]
+  pull_request:
+    branches: ["*"]
 
 jobs:
   enforce-pr:
