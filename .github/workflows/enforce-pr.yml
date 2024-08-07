@@ -1,0 +1,16 @@
+name: Enforce Pull Request Workflow
+
+on:
+  push:
+    branches: ["*"]
+
+jobs:
+  enforce-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if the push is part of a pull request
+        run: |
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
+            echo "Direct push detected. Please make changes through a pull request."
+            exit 1
+          fi
