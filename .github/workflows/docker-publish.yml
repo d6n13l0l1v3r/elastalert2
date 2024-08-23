@@ -2,9 +2,8 @@ name: DockerHub
 
 on:
   push:
-    #I'm not sure if it is better to use 'master' instead of '*' here.
-    #branches: ["master"]
-    branches: ["*"]
+    #branches: ["*"]
+    branches: ["master"]
   pull_request:
     branches: ["*"]
 
